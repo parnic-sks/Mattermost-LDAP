@@ -63,7 +63,7 @@ if (empty($_POST)) {
 				<br>
 
 				<form method="POST">
-					<input type="submit" value="Authorize" name="authorized" id="input_accept" class="input_field">
+					<input type="submit" value="Authorize" name="authorized" id="input_accept" class="input_field" autofocus>
 					<input type="submit" value="Deny" name="authorized" id="input_deny" class="input_field">
 				</form>
 			</div>
