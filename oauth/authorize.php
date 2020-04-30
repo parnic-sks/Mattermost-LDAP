@@ -29,9 +29,12 @@ if (!isset($_SESSION['uid']))
 	exit();
 }
 
-
-// display an authorization form
-if (empty($_POST)) {
+if ($server->userExists(strtolower($_SESSION['uid']))) {
+    // Bypass authorize form, continue Oauth process.
+    $server->handleAuthorizeRequest($request, $response, true, strtolower($_SESSION['uid']));
+}
+// Display an authorization form
+else if (empty($_POST)) {
 	exit('
 <!DOCTYPE html>
 <html>
@@ -72,10 +75,11 @@ if (empty($_POST)) {
 </html>
 	');
 }
-
-// print the authorization code if the user has authorized your client
-$is_authorized = ($_POST['authorized'] === 'Authorize');
-$server->handleAuthorizeRequest($request, $response, $is_authorized,strtolower($_SESSION['uid']));
+else {
+	// print the authorization code if the user has authorized your client
+	$is_authorized = ($_POST['authorized'] === 'Authorize');
+	$server->handleAuthorizeRequest($request, $response, $is_authorized,strtolower($_SESSION['uid']));
+}
 
 if ($is_authorized) 
 {

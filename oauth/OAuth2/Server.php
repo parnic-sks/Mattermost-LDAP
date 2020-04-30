@@ -725,4 +725,33 @@ class Server implements ResourceControllerInterface,
     {
         return isset($this->config[$name]) ? $this->config[$name] : $default;
     }
+
+    /**
+     * Check if user has already connected to oauth server previously and got an associated ID.
+     *
+     * @param string $username
+     * Username of an LDAP user (often uid)
+     *
+     * @return bool
+     * True if user has already an ID, false else.
+     */
+    public function userExists($username)
+    {
+        if (isset($this->storages['authorization_code'])) {
+            // Sanitize and format username
+            $user = strtolower(strip_tags(htmlspecialchars($username)));
+
+            // Use getUsersID() method to retrieve associated ID, if an ID is returned so user already exists.
+            if ($this->storages['authorization_code']->getUsersID($user)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            // Storage error
+            throw new Exception('Fatal Error : Storage is undifined');
+        }
+    }
 }
